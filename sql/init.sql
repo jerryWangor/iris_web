@@ -86,3 +86,13 @@ CREATE TABLE `rolemenu` (
   unique key (`roleid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+
+-----
+系统管理
+权限管理
+用户管理	角色管理	菜单管理
+
+添加用户	添加角色	添加菜单
+编辑用户    编辑角色	编辑菜单
+删除用户    删除角色	删除菜单
+重置密码    角色权限
