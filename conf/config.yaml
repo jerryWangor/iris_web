@@ -1,10 +1,10 @@
 # MySQL 连接配置
 mysql:
-  host: '42.193.50.38'
+  host: '127.0.0.1'
   port: 3306
   database: 'easygoadmin'
-  username: 'jerry'
-  password: 'jerry123'
+  username: 'root'
+  password: 'warjary0416'
   charset: 'utf8mb4'
   debug: true
   logLevel: debug
@@ -16,10 +16,10 @@ mysql:
 # Redis缓存
 Redis:
   Network: "tcp"
-  Addr: "42.193.50.38:9001"
+  Addr: "127.0.0.1:6379"
   Timeout: 30
   MaxActive: 10
-  Password: "jerry123"
+  Password: ""
   Database: "1"
   Prefix: ""
   Delim: "-"
