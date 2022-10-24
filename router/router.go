@@ -29,14 +29,48 @@ import (
 	"easygoadmin/app/widget"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
+	"github.com/kataras/iris/v12/sessions/sessiondb/redis"
+	"time"
 )
 
 // 注册路由
 func RegisterRouter(app *iris.Application) {
+
+	// 2\. 初始化数据库。
+	// 这些是默认值，
+	// 你可以基于你运行中的 redis 服务器的设置去替换它们：
+	db := redis.New(redis.Config{
+		Network:   "tcp",
+		Addr:      "127.0.0.1:6379",
+		Timeout:   time.Duration(30) * time.Second,
+		MaxActive: 10,
+		Password:  "",
+		Database:  "",
+		Prefix:    "",
+		Delim:     "-",
+		Driver:    redis.Redigo(), // 可使用 redis.Radix() 代替。
+	})
+
+	// 可选择配置如下驱动程序：
+	// driver := redis.Redigo()
+	// driver.MaxIdle = ...
+	// driver.IdleTimeout = ...
+	// driver.Wait = ...
+	// redis.Config {Driver: driver}
+
+	// 当执行 control+C/cmd+C  时关闭连接
+	iris.RegisterOnInterrupt(func() {
+		db.Close()
+	})
+
 	// 注册SESSION中间件
 	session := sessions.New(sessions.Config{
 		Cookie: sessions.DefaultCookieName,
 	})
+
+	// 3\. 注册它们。
+	session.UseDatabase(db)
+
 	// SESSION中间件
 	app.Use(session.Handler())
 	// 登录验证中间件

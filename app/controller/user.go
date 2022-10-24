@@ -102,6 +102,7 @@ func (c *UserController) Edit(ctx iris.Context) {
 	}
 
 	// 查询记录
+	var userInfo = vo.UserInfoVo{}
 	id := ctx.Params().GetIntDefault("id", 0)
 	if id > 0 {
 		info := &model.User{Id: id}
@@ -114,7 +115,6 @@ func (c *UserController) Edit(ctx iris.Context) {
 			return
 		}
 
-		var userInfo = vo.UserInfoVo{}
 		userInfo.User = *info
 		// 头像
 		userInfo.Avatar = utils.GetImageUrl(info.Avatar)
@@ -127,10 +127,9 @@ func (c *UserController) Edit(ctx iris.Context) {
 			roleIds = append(roleIds, v.RoleId)
 		}
 		userInfo.RoleIds = roleIds
-
-		// 数据绑定
-		ctx.ViewData("info", userInfo)
 	}
+	// 数据绑定
+	ctx.ViewData("info", userInfo)
 	// 绑定参数
 	ctx.ViewData("genderList", constant.GENDER_LIST)
 	ctx.ViewData("levelList", levelList)

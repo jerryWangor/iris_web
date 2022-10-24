@@ -10,7 +10,7 @@ func Query(s string) template.HTML {
 	return unescapeHTML(str)
 }
 
-func Select(s string, list string, level int) template.HTML {
+func Select(s string, list interface{}, level int) template.HTML {
 	str := "<select name=\"city\" lay-verify=\"\">\n  <option value=\"\">请选择一个城市</option>\n  <option value=\"010\">北京</option>\n  <option value=\"021\">上海</option>\n  <option value=\"0571\">杭州</option>\n</select>"
 	return unescapeHTML(str)
 }
@@ -83,7 +83,7 @@ func Safe(s string) template.HTML {
 	return ""
 }
 
-func Date(s string, b string) template.HTML {
+func Date(s string, b int64) template.HTML {
 	//{{date "birthday|1|出生日期|date" .info.Birthday}}
 	return ""
 }
@@ -113,7 +113,7 @@ func Kindeditor(s string) template.HTML {
 	return ""
 }
 
-func Checkbox(s string, data map[string]interface{}, r []int) template.HTML {
+func Checkbox(s string, data map[int]string, r interface{}) template.HTML {
 	//{{checkbox "roleIds|name|id" .roleList .info.RoleIds}}
 	return ""
 }
@@ -122,7 +122,7 @@ func Radio(s string) template.HTML {
 	return ""
 }
 
-func City(c int, a int, b int) template.HTML {
+func City(s string, a int, b int) template.HTML {
 	//{{city .info.DistrictCode 3 1}}
 	return ""
 }
