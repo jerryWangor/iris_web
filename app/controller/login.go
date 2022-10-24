@@ -59,14 +59,14 @@ func (c *LoginController) Login(ctx iris.Context) {
 			return
 		}
 		// 校验验证码
-		verifyRes := base64Captcha.VerifyCaptcha(req.IdKey, req.Captcha)
-		if !verifyRes {
-			ctx.JSON(common.JsonResult{
-				Code: -1,
-				Msg:  "验证码不正确",
-			})
-			return
-		}
+		//verifyRes := base64Captcha.VerifyCaptcha(req.IdKey, req.Captcha)
+		//if !verifyRes {
+		//	ctx.JSON(common.JsonResult{
+		//		Code: -1,
+		//		Msg:  "验证码不正确",
+		//	})
+		//	return
+		//}
 		// 系统登录
 		err := service.Login.UserLogin(req.UserName, req.Password, ctx)
 		if err != nil {

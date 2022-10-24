@@ -29,6 +29,7 @@ import (
 	"easygoadmin/utils"
 	"easygoadmin/utils/gstr"
 	"errors"
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
 	"time"
@@ -48,6 +49,7 @@ func (s *loginService) UserLogin(username, password string, ctx iris.Context) er
 	}
 	// 密码校验
 	pwd, _ := utils.Md5(password + user.Username)
+	fmt.Println(user.Password, pwd)
 	if user.Password != pwd {
 		return errors.New("密码不正确")
 	}

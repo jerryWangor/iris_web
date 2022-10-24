@@ -31,6 +31,7 @@ import (
 	"easygoadmin/utils/gconv"
 	"easygoadmin/utils/gstr"
 	"errors"
+	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -344,6 +345,7 @@ func (s *menuService) GetPermissionMenuList(userId int) interface{} {
 	if userId == 1 {
 		// 管理员(拥有全部权限)
 		menuList, _ := Menu.GetTreeList()
+		fmt.Println("菜单列表", menuList)
 		return menuList
 	} else {
 		// 非管理员

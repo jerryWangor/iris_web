@@ -61,7 +61,7 @@ func (c *UserController) List(ctx iris.Context) {
 	lists, count, err := service2.User.GetList(req)
 	if err != nil {
 		ctx.JSON(common.JsonResult{
-			Code: -1,
+			Code: -2,
 			Msg:  err.Error(),
 		})
 		return
