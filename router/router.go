@@ -27,6 +27,7 @@ import (
 	"easygoadmin/app/controller"
 	"easygoadmin/app/middleware"
 	"easygoadmin/app/widget"
+	"easygoadmin/conf"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/kataras/iris/v12/sessions/sessiondb/redis"
@@ -40,14 +41,14 @@ func RegisterRouter(app *iris.Application) {
 	// 这些是默认值，
 	// 你可以基于你运行中的 redis 服务器的设置去替换它们：
 	db := redis.New(redis.Config{
-		Network:   "tcp",
-		Addr:      "127.0.0.1:6379",
-		Timeout:   time.Duration(30) * time.Second,
-		MaxActive: 10,
-		Password:  "",
-		Database:  "",
-		Prefix:    "",
-		Delim:     "-",
+		Network:   conf.CONFIG.Redis.Network,
+		Addr:      conf.CONFIG.Redis.Addr,
+		Timeout:   time.Duration(conf.CONFIG.Redis.Timeout) * time.Second,
+		MaxActive: conf.CONFIG.Redis.MaxActive,
+		Password:  conf.CONFIG.Redis.Password,
+		Database:  conf.CONFIG.Redis.Database,
+		Prefix:    conf.CONFIG.Redis.Prefix,
+		Delim:     conf.CONFIG.Redis.Delim,
 		Driver:    redis.Redigo(), // 可使用 redis.Radix() 代替。
 	})
 
