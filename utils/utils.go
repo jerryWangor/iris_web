@@ -35,6 +35,8 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -212,4 +214,77 @@ func InStringArray(value string, array []string) bool {
 		}
 	}
 	return false
+}
+
+func InIntArray(value int, array []int) bool {
+	for _, v := range array {
+		if v == value {
+			return true
+		}
+	}
+	return false
+}
+
+// 时间戳转日期
+func TimestampToDate(t int64) string {
+	return time.Unix(t, 0).Format("2006-01-02")
+}
+
+// 时间戳转时间
+func TimestampToDateTime(t int64) string {
+	return time.Unix(t, 0).Format("2006-01-02 15:04:05")
+}
+
+// 时间转时间戳
+func DateTimeToTimestamp(s string) int64 {
+	res, _ := time.ParseInLocation("2006-01-02 15:04:05", s, time.Local)
+	return res.Unix()
+}
+
+// GetNowTimeString 获取当前时间
+func GetNowTimeString() string {
+	return time.Now().Format("2006-01-02 15:04:05")
+}
+
+// GetNowTimeStamp 获取当前时间-时间戳
+func GetNowTimeStamp() int64 {
+	return time.Now().Unix()
+}
+
+// GetNowDateString 获取当前日期
+func GetNowDateString() string {
+	return time.Now().Format("2006-01-02")
+}
+
+// GetNowTimeTime 获取time.Time类型的
+func GetNowTimeTime() time.Time {
+	time, _ := time.ParseInLocation("2006-01-02 15:04:05", GetNowTimeString(), time.Local)
+	return time
+}
+
+// GetNowDateTime 获取time.Time类型的
+func GetNowDateTime() time.Time {
+	date, _ := time.ParseInLocation("2006-01-02", GetNowDateString(), time.Local)
+	return date
+}
+
+// TimeStampToString 时间戳转年季月时分秒字符串
+func TimeStampToString(timestamp int64) string {
+	if timestamp > 10000000000 {
+		time1 := timestamp / 1000000
+		time2 := timestamp % 1000000
+		return time.Unix(time1, 0).Format("2006-01-02 15:04:05") + "+" + strconv.FormatInt(time2, 10)
+	} else {
+		return time.Unix(timestamp, 0).Format("2006-01-02 15:04:05")
+	}
+}
+
+// 获取map的index排序切片
+func GetMapIndexOrderInt(m map[int]string) []int {
+	var dslice []int
+	for k, _ := range m {
+		dslice = append(dslice, k)
+	}
+	sort.Ints(dslice)
+	return dslice
 }

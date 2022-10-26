@@ -121,6 +121,7 @@ func (c *MenuController) Edit(ctx iris.Context) {
 	// 绑定常量
 	ctx.ViewData("menuList", menuList)
 	ctx.ViewData("typeList", constant.MENU_TYPE_LIST)
+	ctx.ViewData("targetList", constant.MENU_TARGET_LIST)
 	// 模板布局
 	ctx.ViewLayout("public/form.html")
 	// 渲染模板

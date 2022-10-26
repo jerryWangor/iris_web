@@ -8,23 +8,9 @@
 			</div>
 		</div>
 		<div class="layui-inline">
-			<label class="layui-form-label">菜单图标：</label>
-			<div class="layui-input-inline">
-				{{icon "icon" .info.Icon}}
-			</div>
-		</div>
-	</div>
-	<div class="layui-form-item">
-		<div class="layui-inline">
 			<label class="layui-form-label">URL地址：</label>
 			<div class="layui-input-inline">
 				<input name="url" value="{{.info.Url}}" autocomplete="off" placeholder="请输入URL地址" class="layui-input" type="text">
-			</div>
-		</div>
-		<div class="layui-inline">
-			<label class="layui-form-label">参数：</label>
-			<div class="layui-input-inline">
-				<input name="param" value="{{.info.Param}}" autocomplete="off" placeholder="请输入参数" class="layui-input" type="text">
 			</div>
 		</div>
 	</div>
@@ -66,7 +52,7 @@
 		<div class="layui-inline">
 			<label class="layui-form-label">打开方式：</label>
 			<div class="layui-input-inline">
-				{{select "target|1|打开方式|name|id" "1=内部打开,2=外部打开"  .info.Target}}
+				{{select "target|1|打开方式|name|id" .targetList  .info.Target}}
 			</div>
 		</div>
 	</div>

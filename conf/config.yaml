@@ -45,6 +45,6 @@ easygoadmin:
   # 端口号
   port: 9087
   # 调试模式
-  debug: true
+  debug: false
   # 图片域名
   image: "http://images.iris.layui"

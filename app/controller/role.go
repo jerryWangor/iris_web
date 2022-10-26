@@ -29,6 +29,7 @@ import (
 	"easygoadmin/app/service"
 	"easygoadmin/utils"
 	"easygoadmin/utils/common"
+	"fmt"
 	"github.com/gookit/validate"
 	"github.com/kataras/iris/v12"
 )
@@ -86,6 +87,7 @@ func (c *RoleController) Edit(ctx iris.Context) {
 			})
 			return
 		}
+		fmt.Println(info)
 		// 数据绑定
 		ctx.ViewData("info", info)
 	}
@@ -115,6 +117,7 @@ func (c *RoleController) Add(ctx iris.Context) {
 		})
 		return
 	}
+
 	// 调用添加方法
 	rows, err := service.Role.Add(req, utils.Uid(ctx))
 	if err != nil || rows == 0 {

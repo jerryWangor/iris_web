@@ -172,6 +172,7 @@ func RegisterRouter(app *iris.Application) {
 		role.Post("/add", controller.Role.Add)
 		role.Post("/update", controller.Role.Update)
 		role.Post("/delete/{id:int}", controller.Role.Delete)
+		role.Post("/delete/{id:string}", controller.Role.Delete)
 		role.Post("/setStatus", controller.Role.Status)
 		role.Get("/getRoleList", controller.Role.GetRoleList)
 	}

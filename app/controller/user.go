@@ -42,6 +42,8 @@ type UserController struct{}
 func (c *UserController) Index(ctx iris.Context) {
 	// 模板布局
 	ctx.ViewLayout("public/layout.html")
+
+	ctx.ViewData("genderList", constant.GENDER_LIST)
 	// 渲染模板
 	ctx.View("user/index.html")
 }
@@ -95,11 +97,12 @@ func (c *UserController) Edit(ctx iris.Context) {
 	deptList := service2.Dept.MakeList(deptData)
 	// 获取角色
 	roleData := make([]model.Role, 0)
-	utils.XormDb.Where("status=1 and mark=1").Find(&roleData)
+	utils.XormDb.Where("status=1 and mark=1").OrderBy("id").Find(&roleData)
 	roleList := make(map[int]string)
 	for _, v := range roleData {
 		roleList[v.Id] = v.Name
 	}
+	roleIds := make([]interface{}, 0)
 
 	// 查询记录
 	var userInfo = vo.UserInfoVo{}
@@ -122,12 +125,12 @@ func (c *UserController) Edit(ctx iris.Context) {
 		// 角色ID
 		var userRoleList []model.UserRole
 		utils.XormDb.Where("user_id=?", info.Id).Find(&userRoleList)
-		roleIds := make([]interface{}, 0)
 		for _, v := range userRoleList {
 			roleIds = append(roleIds, v.RoleId)
 		}
-		userInfo.RoleIds = roleIds
 	}
+
+	userInfo.RoleIds = roleIds
 	// 数据绑定
 	ctx.ViewData("info", userInfo)
 	// 绑定参数

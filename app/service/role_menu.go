@@ -49,7 +49,10 @@ func (s *roleMenuService) GetRoleMenuList(roleId int) ([]vo.RoleMenuInfo, error)
 	utils.XormDb.Where("role_id=?", roleId).Find(&roleMenuList)
 	idList := make([]interface{}, 0)
 	for _, v := range roleMenuList {
-		idList = append(idList, v.MenuIds)
+		mids := strings.Split(v.MenuIds, ",")
+		for _, id := range mids {
+			idList = append(idList, id)
+		}
 	}
 
 	// 对象处理

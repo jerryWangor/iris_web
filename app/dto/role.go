@@ -37,7 +37,7 @@ type RoleAddReq struct {
 	Id     int    `form:"id"`
 	Name   string `form:"name" validate:"required"`
 	Code   string `form:"code" validate:"required"`
-	Status int    `form:"status" validate:"int"`
+	Status string `form:"status" validate:"string"`
 	Sort   int    `form:"sort" validate:"int"`
 	Note   string `form:"note"`
 }
@@ -57,7 +57,7 @@ type RoleUpdateReq struct {
 	Id     int    `form:"id" validate:"int"`
 	Name   string `form:"name" validate:"required"`
 	Code   string `form:"code" validate:"required"`
-	Status int    `form:"status" validate:"int"`
+	Status string `form:"status" validate:"string"`
 	Sort   int    `form:"sort" validate:"int"`
 	Note   string `form:"note"`
 }

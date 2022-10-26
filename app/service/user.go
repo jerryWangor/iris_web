@@ -139,13 +139,13 @@ func (s *userService) Add(req dto.UserAddReq, userId int) (int64, error) {
 	var entity model.User
 	entity.Realname = req.Realname
 	entity.Nickname = req.Nickname
-	entity.Gender = req.Gender
+	entity.Gender = 3
 	entity.Avatar = req.Avatar
 	entity.Mobile = req.Mobile
 	entity.Email = req.Email
 	// 日期处理
-	tm2, _ := time.Parse("2006-01-02", req.Birthday)
-	entity.Birthday = tm2.Unix()
+	req.Birthday, _ = time.ParseInLocation("2006-01-02", "2000-11-11", time.Local)
+	entity.Birthday = req.Birthday
 	entity.DeptId = req.DeptId
 	entity.LevelId = req.LevelId
 	entity.PositionId = req.PositionId
@@ -155,15 +155,20 @@ func (s *userService) Add(req dto.UserAddReq, userId int) (int64, error) {
 	entity.Address = req.Address
 	entity.Username = req.Username
 	entity.Intro = req.Intro
-	entity.Status = req.Status
+	if req.Status == "on" {
+		entity.Status = 1
+	} else {
+		entity.Status = 2
+	}
 	entity.Note = req.Note
 	entity.Sort = req.Sort
 
 	// 密码
-	if req.Password != "" {
-		password, _ := utils.Md5(req.Password + req.Username)
-		entity.Password = password
+	if req.Password == "" {
+		req.Password = req.Username + "123"
 	}
+	password, _ := utils.Md5(req.Password + req.Username)
+	entity.Password = password
 
 	// 头像处理
 	if req.Avatar != "" {
@@ -174,9 +179,9 @@ func (s *userService) Add(req dto.UserAddReq, userId int) (int64, error) {
 		entity.Avatar = avatar
 	}
 	entity.CreateUser = userId
-	entity.CreateTime = time.Now().Unix()
+	entity.CreateTime = utils.GetNowTimeTime()
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	entity.Mark = 1
 
 	// 插入记录
@@ -217,8 +222,8 @@ func (s *userService) Update(req dto.UserUpdateReq, userId int) (int64, error) {
 	entity.Mobile = req.Mobile
 	entity.Email = req.Email
 	// 日期处理
-	tm2, _ := time.Parse("2006-01-02", req.Birthday)
-	entity.Birthday = tm2.Unix()
+	req.Birthday, _ = time.ParseInLocation("2006-01-02", "2000-11-11", time.Local)
+	entity.Birthday = req.Birthday
 	entity.DeptId = req.DeptId
 	entity.LevelId = req.LevelId
 	entity.PositionId = req.PositionId
@@ -228,7 +233,11 @@ func (s *userService) Update(req dto.UserUpdateReq, userId int) (int64, error) {
 	entity.Address = req.Address
 	entity.Username = req.Username
 	entity.Intro = req.Intro
-	entity.Status = req.Status
+	if req.Status == "on" {
+		entity.Status = 1
+	} else {
+		entity.Status = 2
+	}
 	entity.Note = req.Note
 	entity.Sort = req.Sort
 
@@ -247,7 +256,7 @@ func (s *userService) Update(req dto.UserUpdateReq, userId int) (int64, error) {
 		entity.Avatar = avatar
 	}
 	entity.CreateUser = userId
-	entity.CreateTime = time.Now().Unix()
+	entity.CreateTime = utils.GetNowTimeTime()
 	entity.Mark = 1
 	// 更新记录
 	rows, err := entity.Update()
@@ -316,7 +325,7 @@ func (s *userService) Status(req dto.UserStatusReq, userId int) (int64, error) {
 	entity.Id = info.Id
 	entity.Status = req.Status
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	return entity.Update()
 }
 
@@ -343,7 +352,7 @@ func (s *userService) ResetPwd(id int, userId int) (int64, error) {
 	rows, err := utils.XormDb.Id(id).Update(&model.User{
 		Password:   password,
 		UpdateUser: userId,
-		UpdateTime: time.Now().Unix(),
+		UpdateTime: utils.GetNowTimeTime(),
 	})
 	if err != nil {
 		return 0, err
@@ -381,7 +390,7 @@ func (s *userService) UpdateUserInfo(req dto.UserInfoReq, userId int) (int64, er
 		Address:    req.Address,
 		Intro:      req.Intro,
 		UpdateUser: userId,
-		UpdateTime: time.Now().Unix(),
+		UpdateTime: utils.GetNowTimeTime(),
 	})
 	return rows, err
 }
@@ -421,7 +430,7 @@ func (s *userService) UpdatePwd(req dto.UpdatePwd, userId int) (int64, error) {
 	rows, err := utils.XormDb.Id(userId).Update(&model.User{
 		Password:   newPwd,
 		UpdateUser: userId,
-		UpdateTime: time.Now().Unix(),
+		UpdateTime: utils.GetNowTimeTime(),
 	})
 	if err != nil {
 		return 0, err

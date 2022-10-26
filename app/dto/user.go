@@ -23,7 +23,10 @@
 
 package dto
 
-import "github.com/gookit/validate"
+import (
+	"github.com/gookit/validate"
+	"time"
+)
 
 // 用户分页查询条件
 type UserPageReq struct {
@@ -35,73 +38,73 @@ type UserPageReq struct {
 
 // 添加用户
 type UserAddReq struct {
-	Id           int    `form:"id"`
-	Realname     string `form:"realname" validate:"required"`
-	Nickname     string `form:"nickname" validate:"required"`
-	Gender       int    `form:"gender" validate:"int"`
-	Avatar       string `form:"avatar" validate:"required"`
-	Mobile       string `form:"mobile" validate:"required"`
-	Email        string `form:"email" validate:"required"`
-	Birthday     string `form:"birthday" validate:"required"`
-	DeptId       int    `form:"deptId" validate:"int"`
-	LevelId      int    `form:"levelId" validate:"int"`
-	PositionId   int    `form:"positionId" validate:"int"`
-	ProvinceCode string `form:"provinceCode"` // 省份编号
-	CityCode     string `form:"cityCode"`     // 市区编号
-	DistrictCode string `form:"districtCode"` // 区县编号
-	Address      string `form:"address"`
-	Username     string `form:"username" validate:"required"`
-	Password     string `form:"password"`
-	Intro        string `form:"intro"`
-	Status       int    `form:"status" validate:"required"`
-	Note         string `form:"note"`
-	Sort         int    `form:"sort" validate:"required"`
-	RoleIds      string `form:"roleIds"` // 用户角色
+	Id           int       `form:"id"`
+	Realname     string    `form:"realname" validate:"required"`
+	Nickname     string    `form:"nickname" validate:""`
+	Gender       int       `form:"gender" validate:"int"`
+	Avatar       string    `form:"avatar" validate:""`
+	Mobile       string    `form:"mobile" validate:""`
+	Email        string    `form:"email" validate:""`
+	Birthday     time.Time `form:"birthday" validate:""`
+	DeptId       int       `form:"deptId" validate:"int"`
+	LevelId      int       `form:"levelId" validate:"int"`
+	PositionId   int       `form:"positionId" validate:"int"`
+	ProvinceCode string    `form:"provinceCode"` // 省份编号
+	CityCode     string    `form:"cityCode"`     // 市区编号
+	DistrictCode string    `form:"districtCode"` // 区县编号
+	Address      string    `form:"address"`
+	Username     string    `form:"username" validate:"required"`
+	Password     string    `form:"password"`
+	Intro        string    `form:"intro"`
+	Status       string    `form:"status" validate:"string"`
+	Note         string    `form:"note"`
+	Sort         int       `form:"sort" validate:""`
+	RoleIds      string    `form:"roleIds"` // 用户角色
 }
 
 // 添加用户表单验证
 func (v UserAddReq) Messages() map[string]string {
 	return validate.MS{
 		"Realname.required": "用户名称不能为空.",
-		"Nickname.required": "用户昵称不能为空.",
-		"Gender.int":        "请选择用户性别.",
-		"Avatar.required":   "请上传头像.",
-		"Mobile.required":   "手机号码不能为空.",
-		"Email.required":    "电子邮件不能为空.",
-		"Birthday.required": "请选择出生日期.",
-		"DeptId.int":        "请选择所属部门.",
-		"LevelId.int":       "请选择职级.",
-		"PositionId.int":    "请选择用户.",
+		//"Nickname.required": "用户昵称不能为空.",
+		//"Gender.int":        "请选择用户性别.",
+		//"Avatar.required":   "请上传头像.",
+		//"Mobile.required":   "手机号码不能为空.",
+		//"Email.required":    "电子邮件不能为空.",
+		//"Birthday.required": "请选择出生日期.",
+		//"DeptId.int":        "请选择所属部门.",
+		//"LevelId.int":       "请选择职级.",
+		//"PositionId.int":    "请选择用户.",
 		"Username.required": "用户名不能为空.",
 		"Status.int":        "请选择用户状态.",
-		"Sort.int":          "排序不能为空.",
+		//"Sort.int":          "排序不能为空.",
 	}
 }
 
 // 添加用户
 type UserUpdateReq struct {
-	Id           int    `form:"id" validate:"int"`
-	Realname     string `form:"realname" validate:"required"`
-	Nickname     string `form:"nickname" validate:"required"`
-	Gender       int    `form:"gender" validate:"int"`
-	Avatar       string `form:"avatar" validate:"required"`
-	Mobile       string `form:"mobile" validate:"required"`
-	Email        string `form:"email" validate:"required"`
-	Birthday     string `form:"birthday" validate:"required"`
-	DeptId       int    `form:"deptId" validate:"int"`
-	LevelId      int    `form:"levelId" validate:"int"`
-	PositionId   int    `form:"positionId" validate:"int"`
-	ProvinceCode string `form:"provinceCode"` // 省份编号
-	CityCode     string `form:"cityCode"`     // 市区编号
-	DistrictCode string `form:"districtCode"` // 区县编号
-	Address      string `form:"address"`
-	Username     string `form:"username" validate:"required"`
-	Password     string `form:"password"`
-	Intro        string `form:"intro"`
-	Status       int    `form:"status" validate:"required"`
-	Note         string `form:"note"`
-	Sort         int    `form:"sort" validate:"required"`
-	RoleIds      string `form:"roleIds"` // 用户角色
+	Id           int       `form:"id" validate:"int"`
+	Realname     string    `form:"realname" validate:"required"`
+	Nickname     string    `form:"nickname" validate:""`
+	Gender       int       `form:"gender" validate:"int"`
+	Avatar       string    `form:"avatar" validate:""`
+	Mobile       string    `form:"mobile" validate:""`
+	Email        string    `form:"email" validate:""`
+	Birthday     time.Time `form:"birthday" validate:""`
+	DeptId       int       `form:"deptId" validate:"int"`
+	LevelId      int       `form:"levelId" validate:"int"`
+	PositionId   int       `form:"positionId" validate:"int"`
+	ProvinceCode string    `form:"provinceCode"` // 省份编号
+	CityCode     string    `form:"cityCode"`     // 市区编号
+	DistrictCode string    `form:"districtCode"` // 区县编号
+	Address      string    `form:"address"`
+	Username     string    `form:"username" validate:"required"`
+	Password     string    `form:"password"`
+	Intro        string    `form:"intro"`
+	Status       string    `form:"status" validate:"string"`
+	Note         string    `form:"note"`
+	Sort         int       `form:"sort" validate:""`
+	RoleIds      string    `form:"roleIds"` // 用户角色
 }
 
 // 更新用户表单验证
@@ -109,18 +112,18 @@ func (v UserUpdateReq) Messages() map[string]string {
 	return validate.MS{
 		"Id.int":            "用户ID不能为空.",
 		"Realname.required": "用户名称不能为空.",
-		"Nickname.required": "用户昵称不能为空.",
-		"Gender.int":        "请选择用户性别.",
-		"Avatar.required":   "请上传头像.",
-		"Mobile.required":   "手机号码不能为空.",
-		"Email.required":    "电子邮件不能为空.",
-		"Birthday.required": "请选择出生日期.",
-		"DeptId.int":        "请选择所属部门.",
-		"LevelId.int":       "请选择职级.",
-		"PositionId.int":    "请选择用户.",
+		//"Nickname.required": "用户昵称不能为空.",
+		//"Gender.int":        "请选择用户性别.",
+		//"Avatar.required":   "请上传头像.",
+		//"Mobile.required":   "手机号码不能为空.",
+		//"Email.required":    "电子邮件不能为空.",
+		//"Birthday.required": "请选择出生日期.",
+		//"DeptId.int":        "请选择所属部门.",
+		//"LevelId.int":       "请选择职级.",
+		//"PositionId.int":    "请选择用户.",
 		"Username.required": "用户名不能为空.",
 		"Status.int":        "请选择用户状态.",
-		"Sort.int":          "排序不能为空.",
+		//"Sort.int":          "排序不能为空.",
 	}
 }
 
@@ -153,11 +156,11 @@ type UserInfoReq struct {
 func (v UserInfoReq) Messages() map[string]string {
 	return validate.MS{
 		"Realname.required": "用户名称不能为空.",
-		"Nickname.required": "用户昵称不能为空.",
-		"Gender.int":        "请选择用户性别.",
-		"Mobile.required":   "手机号码不能为空.",
-		"Email.required":    "电子邮件不能为空.",
-		"Address.required":  "用户名不能为空.",
+		//"Nickname.required": "用户昵称不能为空.",
+		//"Gender.int":       "请选择用户性别.",
+		//"Mobile.required":  "手机号码不能为空.",
+		//"Email.required":   "电子邮件不能为空.",
+		//"Address.required": "用户名不能为空.",
 	}
 }
 

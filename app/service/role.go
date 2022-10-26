@@ -31,7 +31,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"time"
 )
 
 var Role = new(roleService)
@@ -64,13 +63,17 @@ func (s *roleService) Add(req dto.RoleAddReq, userId int) (int64, error) {
 	var entity model.Role
 	entity.Name = req.Name
 	entity.Code = req.Code
-	entity.Status = gconv.Int(req.Status)
+	if req.Status == "on" {
+		entity.Status = 1
+	} else {
+		entity.Status = 2
+	}
 	entity.Sort = gconv.Int(req.Sort)
 	entity.Note = req.Note
 	entity.CreateUser = userId
-	entity.CreateTime = time.Now().Unix()
+	entity.CreateTime = utils.GetNowTimeTime()
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	entity.Mark = 1
 	// 插入数据
 	return entity.Insert()
@@ -89,11 +92,15 @@ func (s *roleService) Update(req dto.RoleUpdateReq, userId int) (int64, error) {
 	// 设置参数
 	entity.Name = req.Name
 	entity.Code = req.Code
-	entity.Status = gconv.Int(req.Status)
+	if req.Status == "on" {
+		entity.Status = 1
+	} else {
+		entity.Status = 2
+	}
 	entity.Sort = gconv.Int(req.Sort)
 	entity.Note = req.Note
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	// 更新数据
 	return entity.Update()
 }
@@ -143,6 +150,6 @@ func (s *roleService) Status(req dto.RoleStatusReq, userId int) (int64, error) {
 	entity.Id = gconv.Int(req.Id)
 	entity.Status = gconv.Int(req.Status)
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	return entity.Update()
 }

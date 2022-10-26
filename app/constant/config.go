@@ -29,6 +29,11 @@ var MENU_TYPE_LIST = map[int]string{
 	1: "节点",
 }
 
+var MENU_TARGET_LIST = map[int]string{
+	1: "内部打开",
+	2: "外部打开",
+}
+
 // 部门类型
 var DEPT_TYPE_LIST = map[int]string{
 	1: "公司",

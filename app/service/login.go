@@ -32,7 +32,6 @@ import (
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
-	"time"
 )
 
 var Login = new(loginService)
@@ -58,7 +57,7 @@ func (s *loginService) UserLogin(username, password string, ctx iris.Context) er
 		return errors.New("您的账号已被禁用,请联系管理员")
 	}
 	// 更新登录时间、登录IP
-	utils.XormDb.Id(user.Id).Update(&model.User{LoginTime: time.Now().Unix(), LoginIp: "", UpdateTime: time.Now().Unix()})
+	utils.XormDb.Id(user.Id).Update(&model.User{LoginTime: utils.GetNowTimeTime(), LoginIp: "", UpdateTime: utils.GetNowTimeTime()})
 	// 设置SESSION
 	sessions.Get(ctx).Set(conf.USER_ID, user.Id)
 	// 返回token
