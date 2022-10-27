@@ -40,7 +40,7 @@ func CheckAuth(ctx iris.Context) {
 
 	// 放行设置
 	urlItem := []string{"/captcha", "/login"}
-	whiteItem := []string{"/main", "/index"}
+	whiteItem := []string{"/", "/main", "/index", "/userInfo", "/updatePwd", "/logout"}
 	if !utils.InStringArray(ctx.Path(), urlItem) && !strings.Contains(ctx.Path(), "static") {
 		// 判断不在白名里
 		if utils.IsLogin(ctx) && !utils.InStringArray(ctx.Path(), whiteItem) {
