@@ -35,7 +35,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 )
 
 var Menu = new(menuService)
@@ -70,13 +69,17 @@ func (s *menuService) Add(req dto.MenuAddReq, userId int) (int64, error) {
 	entity.Target = gconv.Int(req.Target)
 	entity.Permission = req.Permission
 	entity.Type = gconv.Int(req.Type)
-	entity.Status = gconv.Int(req.Status)
+	if req.Status == "on" {
+		entity.Status = 1
+	} else {
+		entity.Status = 2
+	}
 	entity.Note = req.Note
 	entity.Sort = gconv.Int(req.Sort)
 	entity.CreateUser = userId
-	entity.CreateTime = time.Now().Unix()
+	entity.CreateTime = utils.GetNowTimeTime()
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	entity.Mark = 1
 	// 插入数据
 	rows, err := entity.Insert()
@@ -105,11 +108,15 @@ func (s *menuService) Update(req dto.MenuUpdateReq, userId int) (int64, error) {
 	entity.Target = gconv.Int(req.Target)
 	entity.Permission = req.Permission
 	entity.Type = gconv.Int(req.Type)
-	entity.Status = gconv.Int(req.Status)
+	if req.Status == "on" {
+		entity.Status = 1
+	} else {
+		entity.Status = 2
+	}
 	entity.Note = req.Note
 	entity.Sort = gconv.Int(req.Sort)
 	entity.UpdateUser = userId
-	entity.UpdateTime = time.Now().Unix()
+	entity.UpdateTime = utils.GetNowTimeTime()
 	// 更新数据
 	rows, err := entity.Update()
 	if err != nil || rows == 0 {
@@ -236,9 +243,9 @@ func setPermission(menuType int, funcIds string, name string, url string, parent
 			entity.Target = 1
 			entity.Sort = value
 			entity.CreateUser = userId
-			entity.CreateTime = time.Now().Unix()
+			entity.CreateTime = utils.GetNowTimeTime()
 			entity.UpdateUser = userId
-			entity.UpdateTime = time.Now().Unix()
+			entity.UpdateTime = utils.GetNowTimeTime()
 			entity.Mark = 1
 
 			// 插入节点
@@ -340,8 +347,8 @@ func (s *menuService) MakeList(data []*vo.MenuTreeNode) map[int]string {
 	return menuList
 }
 
-// 获取菜单权限列表
-func (s *menuService) GetPermissionMenuList(userId int) interface{} {
+// 获取菜单权限列表（Tree）
+func (s *menuService) GetPermissionMenuTreeList(userId int) interface{} {
 	if userId == 1 {
 		// 管理员(拥有全部权限)
 		menuList, _ := Menu.GetTreeList()
@@ -353,17 +360,76 @@ func (s *menuService) GetPermissionMenuList(userId int) interface{} {
 		// 数据转换
 		list := make([]model.Menu, 0)
 		// 查询数据
-		utils.XormDb.Table("sys_menu").Alias("m").
-			Join("INNER", []string{"sys_role_menu", "r"}, "m.id = r.menu_id").
-			Join("INNER", []string{"sys_user_role", "ur"}, "ur.role_id=r.role_id").
-			Where("ur.user_id=? AND m.type=0 AND m.`status`=1 AND m.mark=1", userId).
-			Cols("m.*").
-			OrderBy("m.id asc").
-			Find(&list)
+		//utils.XormDb.Table("sys_menu").Alias("m").
+		//	Join("INNER", []string{"sys_role_menu", "r"}, "m.id = r.menu_id").
+		//	Join("INNER", []string{"sys_user_role", "ur"}, "ur.role_id=r.role_id").
+		//	Where("ur.user_id=? AND m.type=0 AND m.`status`=1 AND m.mark=1", userId).
+		//	Cols("m.*").
+		//	OrderBy("m.id asc").
+		//	Find(&list)
+
+		// 使用原生sql
+		rmList := make([]model.RoleMenu, 0)
+		utils.XormDb.Table("sys_role_menu").Alias("rm").
+			Join("INNER", []string{"sys_user_role", "ur"}, "rm.role_id = ur.role_id").
+			Where("ur.user_id=?", userId).
+			Cols("rm.*").
+			OrderBy("rm.id asc").
+			Find(&rmList)
+
+		ids := make([]string, 0, 0)
+		for _, v := range rmList {
+			tids := strings.Split(v.MenuIds, ",")
+			for _, id := range tids {
+				ids = append(ids, id)
+			}
+		}
+		ids = utils.RemoveDuplicatesAndEmpty(ids)
+		idstr := strings.Join(ids, ",")
+		// 再查询所有菜单
+		utils.XormDb.Where("type=0 AND `status`=1 AND mark=1 and id in (" + idstr + ")").OrderBy("id asc").Find(&list)
+		fmt.Println(list)
 
 		// 数据处理
 		var menuNode vo.MenuTreeNode
 		makeTree(list, &menuNode)
 		return menuNode.Children
+	}
+}
+
+// 获取菜单权限列表
+func (s *menuService) GetPermissionMenuList(userId int) interface{} {
+	if userId == 1 {
+		// 管理员(拥有全部权限)
+		list := make([]model.Menu, 0)
+		err := utils.XormDb.Where("mark=1").OrderBy("sort").Find(&list)
+		if err != nil {
+			return nil
+		}
+		return list
+	} else {
+		// 非管理员
+		list := make([]model.Menu, 0)
+		// 使用原生sql
+		rmList := make([]model.RoleMenu, 0)
+		utils.XormDb.Table("sys_role_menu").Alias("rm").
+			Join("INNER", []string{"sys_user_role", "ur"}, "rm.role_id = ur.role_id").
+			Where("ur.user_id=?", userId).
+			Cols("rm.*").
+			OrderBy("rm.id asc").
+			Find(&rmList)
+
+		ids := make([]string, 0, 0)
+		for _, v := range rmList {
+			tids := strings.Split(v.MenuIds, ",")
+			for _, id := range tids {
+				ids = append(ids, id)
+			}
+		}
+		ids = utils.RemoveDuplicatesAndEmpty(ids)
+		idstr := strings.Join(ids, ",")
+		// 再查询所有菜单
+		utils.XormDb.Where("`status`=1 AND mark=1 and id in (" + idstr + ")").OrderBy("id asc").Find(&list)
+		return list
 	}
 }

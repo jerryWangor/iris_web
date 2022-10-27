@@ -31,3 +31,4 @@ var (
 
 // USER_ID 登录用户ID
 const USER_ID = "userId"
+const USER_MENU_LIST = "userMenuList"

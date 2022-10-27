@@ -30,7 +30,7 @@ type Redis struct {
 	Timeout   int    `mapstructure:"Timeout" json:"Timeout" yaml:"Timeout"`
 	MaxActive int    `mapstructure:"MaxActive" json:"MaxActive" yaml:"MaxActive"`
 	Password  string `mapstructure:"Password" json:"Password" yaml:"Password"`
-	Database  string `mapstructure:"Database" json:"Database" yaml:"Database"`
+	Database  int    `mapstructure:"Database" json:"Database" yaml:"Database"`
 	Prefix    string `mapstructure:"Prefix" json:"Prefix" yaml:"Prefix"`
 	Delim     string `mapstructure:"Delim" json:"Delim" yaml:"Delim"`
 }

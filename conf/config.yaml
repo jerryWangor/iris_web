@@ -20,7 +20,7 @@ Redis:
   Timeout: 30
   MaxActive: 10
   Password: "jerry123"
-  Database: "1"
+  Database: 1
   Prefix: ""
   Delim: "-"
 

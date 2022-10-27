@@ -32,7 +32,7 @@ import (
 
 // 登录验证中间件
 func CheckLogin(ctx iris.Context) {
-	
+
 	// 放行设置
 	urlItem := []string{"/captcha", "/login"}
 	if !utils.InStringArray(ctx.Path(), urlItem) && !strings.Contains(ctx.Path(), "static") {

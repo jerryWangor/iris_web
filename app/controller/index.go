@@ -41,7 +41,7 @@ func (c *IndexController) Index(ctx iris.Context) {
 	// 获取用户信息
 	userInfo := service.Login.GetProfile(utils.Uid(ctx))
 	// 获取菜单列表
-	menuList := service.Menu.GetPermissionMenuList(userInfo.Id)
+	menuList := service.Menu.GetPermissionMenuTreeList(userInfo.Id)
 	ctx.ViewData("userInfo", userInfo)
 	ctx.ViewData("menuList", menuList)
 	// 渲染模板

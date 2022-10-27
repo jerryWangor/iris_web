@@ -41,9 +41,9 @@ type MenuAddReq struct {
 	Url        string `form:"url" validate:"required"`  // URL地址
 	Param      string `form:"param"`                    // 参数
 	Pid        int    `form:"pid" validate:"int"`       // 上级ID
-	Type       int    `form:"type"`                     // 类型：1模块 2导航 3菜单 4节点
+	Type       int    `form:"type"`                     // 类型：0 菜单 1 节点
 	Permission string `form:"permission"`               // 权限标识
-	Status     int    `form:"status" validate:"int"`    // 状态：1正常 2禁用
+	Status     string `form:"status" validate:"string"` // 状态：1正常 2禁用
 	Target     int    `form:"target"`                   // 打开方式：1内部打开 2外部打开
 	Note       string `form:"note"`                     // 菜单备注
 	Sort       int    `form:"sort" validate:"int"`      // 显示顺序
@@ -71,7 +71,7 @@ type MenuUpdateReq struct {
 	Pid        int    `form:"pid" validate:"int"`       // 上级ID
 	Type       int    `form:"type"`                     // 类型：1模块 2导航 3菜单 4节点
 	Permission string `form:"permission"`               // 权限标识
-	Status     int    `form:"status" validate:"int"`    // 状态：1正常 2禁用
+	Status     string `form:"status" validate:"string"` // 状态：1正常 2禁用
 	Target     int    `form:"target"`                   // 打开方式：1内部打开 2外部打开
 	Note       string `form:"note"`                     // 菜单备注
 	Sort       int    `form:"sort" validate:"int"`      // 显示顺序

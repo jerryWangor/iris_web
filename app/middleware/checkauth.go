@@ -21,70 +21,53 @@
 // | 法律所允许的合法合规的软件产品研发，详细声明内容请阅读《框架免责声明》附件；
 // +----------------------------------------------------------------------
 
-package service
+package middleware
 
 import (
 	"easygoadmin/app/model"
+	"easygoadmin/app/service"
 	"easygoadmin/conf"
 	"easygoadmin/utils"
-	"easygoadmin/utils/gstr"
-	"errors"
+	"easygoadmin/utils/common"
+	"encoding/json"
+	"fmt"
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/sessions"
+	"reflect"
+	"strings"
 )
 
-var Login = new(loginService)
+// 登录验证中间件
+func CheckAuth(ctx iris.Context) {
 
-type loginService struct{}
-
-// 系统登录
-func (s *loginService) UserLogin(username, password string, ctx iris.Context) error {
-	// 查询用户
-	var user model.User
-	has, err := utils.XormDb.Where("username=? and mark=1", username).Get(&user)
-	if err != nil && !has {
-		return errors.New("用户名或者密码不正确")
+	// 放行设置
+	urlItem := []string{"/captcha", "/login"}
+	whiteItem := []string{"/main", "/index"}
+	if !utils.InStringArray(ctx.Path(), urlItem) && !strings.Contains(ctx.Path(), "static") {
+		// 判断不在白名里
+		if utils.IsLogin(ctx) && !utils.InStringArray(ctx.Path(), whiteItem) {
+			// 如果登录了就检查权限
+			user := service.GetUserInfo(ctx)
+			// 查询该用户的权限列表
+			val := utils.RedisClient.Get(utils.GetRedisUidKey(user.Id, conf.USER_MENU_LIST)).Val()
+			mlist := make([]model.Menu, 0, 0)
+			json.Unmarshal([]byte(val), &mlist)
+			fmt.Println("访问地址", ctx.Path())
+			flag := false
+			for _, v := range mlist {
+				if reflect.DeepEqual(v.Url, ctx.Path()) {
+					flag = true
+				}
+			}
+			if flag == false {
+				ctx.JSON(common.JsonResult{
+					Code: -1,
+					Msg:  "没有权限",
+				})
+				return
+			}
+		}
 	}
-	// 密码校验
-	pwd, _ := utils.Md5(password + user.Username)
-	if user.Password != pwd {
-		return errors.New("密码不正确")
-	}
-	// 判断当前用户状态
-	if user.Status != 1 {
-		return errors.New("您的账号已被禁用,请联系管理员")
-	}
-	// 更新登录时间、登录IP
-	utils.XormDb.Id(user.Id).Update(&model.User{LoginTime: utils.GetNowTimeTime(), LoginIp: "", UpdateTime: utils.GetNowTimeTime()})
-	// 设置SESSION
-	sessions.Get(ctx).Set(conf.USER_ID, user.Id)
-	// 设置权限存redis
-	// 查询该用户的所有权限
-	menulist := Menu.GetPermissionMenuList(user.Id)
-	utils.RedisClient.Set(utils.GetRedisUidKey(user.Id, conf.USER_MENU_LIST), utils.ToJson(menulist), 0)
-	// 使用方法
-	//val := utils.RedisClient.Get(utils.GetRedisUidKey(user.Id, conf.USER_MENU_LIST)).Val()
-	//mlist := make([]model.Menu, 0, 0)
-	//json.Unmarshal([]byte(val), &mlist)
-	// iris自带的redis使用方法
-	//common.GetRedisDB().Set(user.Username, sessions.LifeTime{}, conf.USER_MENU_LIST, utils.ToJson(menulist), true)
-	//val := common.GetRedisDB().Get(user.Username, conf.USER_MENU_LIST)
-	//mlist := make([]model.Menu, 0, 0)
-	//json.Unmarshal([]byte(val.(string)), &mlist)
-	// 返回token
-	return nil
-}
-
-// 获取个人信息
-func (s *loginService) GetProfile(userId int) (user *model.User) {
-	user = &model.User{Id: userId}
-	has, err := user.Get()
-	if err != nil || !has {
-		return nil
-	}
-	// 头像
-	if user.Avatar != "" && !gstr.Contains(user.Avatar, conf.CONFIG.EGAdmin.Image) {
-		user.Avatar = utils.GetImageUrl(user.Avatar)
-	}
-	return
+	// 前置中间件
+	ctx.Application().Logger().Infof("Runs before %s", ctx.Path())
+	ctx.Next()
 }

@@ -26,6 +26,7 @@ package common
 import (
 	"easygoadmin/conf"
 	"github.com/kataras/iris/v12/sessions/sessiondb/redis"
+	"strconv"
 	"time"
 )
 
@@ -64,8 +65,8 @@ func initRedisConfig() redis.Config {
 		config.Password = conf.CONFIG.Redis.Password
 	}
 	// 数据库
-	if conf.CONFIG.Redis.Database != "" {
-		config.Database = conf.CONFIG.Redis.Database
+	if conf.CONFIG.Redis.Database >= 0 {
+		config.Database = strconv.FormatInt(int64(conf.CONFIG.Redis.Database), 10)
 	}
 	// 前缀
 	if conf.CONFIG.Redis.Prefix != "" {

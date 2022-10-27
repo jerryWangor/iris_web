@@ -39,7 +39,7 @@ layui.use(['func', 'common', 'form', 'transfer'], function () {
         //【TABLE列数组】
         var cols = [
             {field: 'id', width: 80, title: 'ID', align: 'center', sort: true}
-            , {field: 'name', width: 200, title: '菜单名称', align: 'left'}
+            , {field: 'name', width: 250, title: '菜单名称', align: 'left'}
             , {field: 'type', width: 80, title: '类型', align: 'center', templet(d) {
                     if (d.type == 0) {
                         // 菜单
@@ -112,16 +112,17 @@ layui.use(['func', 'common', 'form', 'transfer'], function () {
          * 提交表单
          */
         form.on('submit(submitForm2)', function (data) {
-            if (data.field['type'] == 0) {
-                // 获取穿梭组件的选中值
-                var funcList = transfer.getData('func'); //获取右侧数据
-                // 重组数据并赋值给字段
-                var item = [];
-                $.each(funcList, function (key, val) {
-                    item.push(val['value']);
-                });
-                data.field['func'] = item.join(",");
-            }
+            // 权限节点现在不知道干嘛的
+            // if (data.field['type'] == 0) {
+            //     // 获取穿梭组件的选中值
+            //     var funcList = transfer.getData('func'); //获取右侧数据
+            //     // 重组数据并赋值给字段
+            //     var item = [];
+            //     $.each(funcList, function (key, val) {
+            //         item.push(val['value']);
+            //     });
+            //     data.field['func'] = item.join(",");
+            // }
             // 提交表单
             common.submitForm(data.field, null, function (res, success) {
                 console.log("保存成功回调");

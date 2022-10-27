@@ -14,7 +14,7 @@ func Query(s string) template.HTML {
 	return unescapeHTML(str)
 }
 
-func Select(s string, list map[int]string, val int) template.HTML {
+func Select(s string, data map[int]string, val int) template.HTML {
 	// {{select "gender|1|性别|name|id" "1=男,2=女,3=保密" .info.Gender}}
 	// {{select "gender|1|性别|name|id" .genderList .info.Gender}}
 	//str := `<select name="city" lay-verify="">
@@ -31,12 +31,15 @@ func Select(s string, list map[int]string, val int) template.HTML {
 	//name := tarr[3]
 	//id := tarr[4]
 
-	str := `<select name="` + n + `" lay-verify="">`
+	dkey := utils.GetMapIndexOrderInt(data)
 
+	str := `<select name="` + n + `" lay-verify="">`
 	str += `<option value="">【请选择` + de + `】</option>`
 	// 循环数据
 	var selected string
-	for id, name := range list {
+	for _, id := range dkey {
+		name := data[id]
+		selected = ""
 		if id == val {
 			selected = "selected"
 		}
@@ -79,15 +82,20 @@ func Add(s string, o string) template.HTML {
 }
 
 func Expand(s string) template.HTML {
-	return ""
+	// {{expand "全部展开"}}
+	str := `<a href="javascript:" class="layui-btn btnOption layui-btn-normal layui-btn-small btnexpand" id="expand" data-param="{}" lay-event="expand"><i class="layui-icon layui-icon-shrink-right"></i> ` + s + `</a>`
+	return unescapeHTML(str)
 }
 
 func Collapse(s string) template.HTML {
-	return ""
+	// {{collapse "全部折叠"}}
+	str := `<a href="javascript:" class="layui-btn btnOption layui-btn-warm layui-btn-small btncollapse" id="collapse" data-param="{}" lay-event="collapse"><i class="layui-icon layui-icon-spread-left"></i> ` + s + `</a>`
+	return unescapeHTML(str)
 }
 
 func Addz(s string) template.HTML {
-	return ""
+	str := `<a href="javascript:" class="layui-btn btnOption layui-btn-normal layui-btn-xs btnaddz" id="addz" data-param="{}" lay-event="addz"><i class="layui-icon layui-icon-add-1"></i> ` + s + `</a>`
+	return unescapeHTML(str)
 }
 
 func Edit(s string) template.HTML {

@@ -31,6 +31,8 @@ import (
 	"easygoadmin/utils"
 	"easygoadmin/utils/gconv"
 	"errors"
+	"github.com/kataras/iris/v12"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -436,4 +438,19 @@ func (s *userService) UpdatePwd(req dto.UpdatePwd, userId int) (int64, error) {
 		return 0, err
 	}
 	return rows, nil
+}
+
+// 获取用户信息
+func GetUserInfo(ctx iris.Context) *model.User {
+	uid := utils.Uid(ctx)
+	// 从数据库查询
+	info := &model.User{Id: uid}
+	has, err := info.Get()
+	if err != nil || !has {
+		log.Println("报错了")
+	}
+	if info == nil {
+		log.Println("记录不存在")
+	}
+	return info
 }

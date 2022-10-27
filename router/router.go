@@ -31,6 +31,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
 	"github.com/kataras/iris/v12/sessions/sessiondb/redis"
+	"strconv"
 	"time"
 )
 
@@ -46,7 +47,7 @@ func RegisterRouter(app *iris.Application) {
 		Timeout:   time.Duration(conf.CONFIG.Redis.Timeout) * time.Second,
 		MaxActive: conf.CONFIG.Redis.MaxActive,
 		Password:  conf.CONFIG.Redis.Password,
-		Database:  conf.CONFIG.Redis.Database,
+		Database:  strconv.FormatInt(int64(conf.CONFIG.Redis.Database), 10),
 		Prefix:    conf.CONFIG.Redis.Prefix,
 		Delim:     conf.CONFIG.Redis.Delim,
 		Driver:    redis.Redigo(), // 可使用 redis.Radix() 代替。
@@ -76,6 +77,7 @@ func RegisterRouter(app *iris.Application) {
 	app.Use(session.Handler())
 	// 登录验证中间件
 	app.Use(middleware.CheckLogin)
+	app.Use(middleware.CheckAuth)
 
 	// 视图文件目录 每次请求时自动重载模板
 	tmpl := iris.HTML("./view", ".html").Reload(true)

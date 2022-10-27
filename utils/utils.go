@@ -28,6 +28,7 @@ import (
 	"easygoadmin/utils/gconv"
 	"easygoadmin/utils/gmd5"
 	"easygoadmin/utils/gstr"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/kataras/iris/v12"
@@ -287,4 +288,31 @@ func GetMapIndexOrderInt(m map[int]string) []int {
 	}
 	sort.Ints(dslice)
 	return dslice
+}
+
+// ToJson 结构体转json
+func ToJson(o interface{}) string {
+	data, err := json.Marshal(o)
+	if err != nil {
+		fmt.Println("json marshal error", err)
+	}
+	return string(data)
+}
+
+//去除重复字符串和空格
+func RemoveDuplicatesAndEmpty(a []string) (ret []string) {
+	a_len := len(a)
+	for i := 0; i < a_len; i++ {
+		if (i > 0 && a[i-1] == a[i]) || len(a[i]) == 0 {
+			continue
+		}
+		ret = append(ret, a[i])
+	}
+	return
+}
+
+// 获取每个账号的key
+func GetRedisUidKey(uid int, key string) string {
+	sid := strconv.FormatInt(int64(uid), 10)
+	return sid + "_" + key
 }

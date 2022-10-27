@@ -32,6 +32,7 @@ package utils
 import (
 	"easygoadmin/conf"
 	"fmt"
+	"github.com/go-redis/redis"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"time"
@@ -41,11 +42,16 @@ import (
 var XormDb *xorm.Engine
 
 func init() {
+	initMysql()
+	initRedis()
+}
+
+func initMysql() {
 	fmt.Println("初始化并连接数据库")
 
 	// 获取配置实例
 	var err error
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&timeout=3s&parseTime=true", conf.CONFIG.Mysql.Username, conf.CONFIG.Mysql.Password, conf.CONFIG.Mysql.Host, conf.CONFIG.Mysql.Port, conf.CONFIG.Mysql.Database, conf.CONFIG.Mysql.Charset)
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&timeout=3s&parseTime=true&loc=Local", conf.CONFIG.Mysql.Username, conf.CONFIG.Mysql.Password, conf.CONFIG.Mysql.Host, conf.CONFIG.Mysql.Port, conf.CONFIG.Mysql.Database, conf.CONFIG.Mysql.Charset)
 	XormDb, err = xorm.NewEngine("mysql", dataSourceName)
 	if err != nil {
 		fmt.Printf("数据库连接错误:%v", err.Error())
@@ -78,5 +84,33 @@ func init() {
 	if conf.CONFIG.Mysql.Debug {
 		XormDb.ShowSQL(conf.CONFIG.Mysql.Debug)
 		XormDb.Logger().SetLevel(core.LOG_DEBUG)
+	}
+
+}
+
+var RedisClient *redis.Client
+
+func initRedis() {
+
+	defer func() {
+		fuckedUp := recover() //recover() 捕获错误保存到变量中
+		if fuckedUp != nil {
+			fmt.Println("Redis连接异常：", fuckedUp)
+		}
+	}()
+
+	addr := conf.CONFIG.Redis.Addr
+	password := conf.CONFIG.Redis.Password
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr:     addr,
+		Password: password,                   // no password set
+		DB:       conf.CONFIG.Redis.Database, // use default DB
+	})
+
+	_, err := RedisClient.Ping().Result()
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println(fmt.Sprintf("Connected to redis: %s", addr))
 	}
 }
