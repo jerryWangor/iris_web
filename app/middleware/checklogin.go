@@ -43,6 +43,6 @@ func CheckLogin(ctx iris.Context) {
 		}
 	}
 	// 前置中间件
-	ctx.Application().Logger().Infof("Runs before %s", ctx.Path())
+	//ctx.Application().Logger().Infof("Runs before %s", ctx.Path())
 	ctx.Next()
 }

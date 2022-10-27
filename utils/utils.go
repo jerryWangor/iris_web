@@ -50,7 +50,7 @@ func AppDebug() bool {
 
 // 登录用户ID
 func Uid(ctx iris.Context) int {
-	fmt.Println("全局获取用户ID")
+	//fmt.Println("全局获取用户ID")
 	//sessValues := sessions.Get(ctx).GetAll()
 	//fmt.Println(len(sessValues))
 	//for k, v := range sessValues {
@@ -63,7 +63,7 @@ func Uid(ctx iris.Context) int {
 // 判断用户登录状态
 func IsLogin(ctx iris.Context) bool {
 	// 初始化session对象
-	fmt.Println("初始化SESSION")
+	//fmt.Println("初始化SESSION")
 	userId := Uid(ctx)
 	return userId > 0
 }

@@ -31,7 +31,6 @@ import (
 	"easygoadmin/utils/gconv"
 	"easygoadmin/utils/gstr"
 	"errors"
-	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -352,7 +351,7 @@ func (s *menuService) GetPermissionMenuTreeList(userId int) interface{} {
 	if userId == 1 {
 		// 管理员(拥有全部权限)
 		menuList, _ := Menu.GetTreeList()
-		fmt.Println("菜单列表", menuList)
+		//fmt.Println("菜单列表", menuList)
 		return menuList
 	} else {
 		// 非管理员
@@ -388,7 +387,7 @@ func (s *menuService) GetPermissionMenuTreeList(userId int) interface{} {
 		idstr := strings.Join(ids, ",")
 		// 再查询所有菜单
 		utils.XormDb.Where("type=0 AND `status`=1 AND mark=1 and id in (" + idstr + ")").OrderBy("id asc").Find(&list)
-		fmt.Println(list)
+		//fmt.Println(list)
 
 		// 数据处理
 		var menuNode vo.MenuTreeNode

@@ -30,7 +30,6 @@ import (
 	"easygoadmin/utils"
 	"easygoadmin/utils/common"
 	"encoding/json"
-	"fmt"
 	"github.com/kataras/iris/v12"
 	"reflect"
 	"strings"
@@ -51,7 +50,6 @@ func CheckAuth(ctx iris.Context) {
 			val := utils.RedisClient.Get(utils.GetRedisUidKey(user.Id, conf.USER_MENU_LIST)).Val()
 			mlist := make([]model.Menu, 0, 0)
 			json.Unmarshal([]byte(val), &mlist)
-			fmt.Println("访问地址", ctx.Path())
 			flag := false
 			for _, v := range mlist {
 				if reflect.DeepEqual(v.Url, ctx.Path()) {
@@ -67,7 +65,5 @@ func CheckAuth(ctx iris.Context) {
 			}
 		}
 	}
-	// 前置中间件
-	ctx.Application().Logger().Infof("Runs before %s", ctx.Path())
 	ctx.Next()
 }
