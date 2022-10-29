@@ -9,8 +9,6 @@
 .vscode/
 log/
 composer.lock
-gitpush.sh
-gitpush.bat
 pkg/
 bin/
 cbuild
