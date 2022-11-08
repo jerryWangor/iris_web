@@ -13,22 +13,20 @@
 				<input name="url" value="{{.info.Url}}" autocomplete="off" placeholder="请输入URL地址" class="layui-input" type="text">
 			</div>
 		</div>
-	</div>
-	<div class="layui-form-item">
 		<div class="layui-inline">
 			<label class="layui-form-label">菜单类型：</label>
 			<div class="layui-input-inline">
 				{{select "type|1|菜单类型|name|id" .typeList .info.Type}}
 			</div>
 		</div>
+	</div>
+	<div class="layui-form-item">
 		<div class="layui-inline">
 			<label class="layui-form-label">上级菜单：</label>
 			<div class="layui-input-inline">
 				{{select "pid|0|上级菜单|name|id" .menuList .info.Pid}}
 			</div>
 		</div>
-	</div>
-	<div class="layui-form-item">
 		<div class="layui-inline">
 			<label class="layui-form-label">权限标识：</label>
 			<div class="layui-input-inline">
@@ -46,7 +44,13 @@
 		<div class="layui-inline">
 			<label class="layui-form-label">是否显示：</label>
 			<div class="layui-input-inline">
-				{{switch "status" "显示|隐藏" .info.Status}}
+				{{switch "hide" "显示|隐藏" .info.Hide}}
+			</div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">状态：</label>
+			<div class="layui-input-inline">
+				{{switch "status" "启用|禁用" .info.Status}}
 			</div>
 		</div>
 		<div class="layui-inline">

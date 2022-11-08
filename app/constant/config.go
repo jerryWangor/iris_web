@@ -23,6 +23,10 @@
 
 package constant
 
+// 使用key加密规则: key=md5(KEY+message)
+const GMKEY = "153dc7b62ec637173a4f3f288e252e6c"
+const GMURL = "http://192.168.1.81:12001"
+
 // 菜单类型
 var MENU_TYPE_LIST = map[int]string{
 	0: "菜单",

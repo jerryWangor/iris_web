@@ -42,13 +42,13 @@ func CheckAuth(ctx iris.Context) {
 	urlItem := []string{"/captcha", "/login"}
 	whiteItem := []string{"/", "/main", "/index", "/userInfo", "/updatePwd", "/logout"}
 	if !utils.InStringArray(ctx.Path(), urlItem) && !strings.Contains(ctx.Path(), "static") {
-		// 判断不在白名里
-		if utils.IsLogin(ctx) && !utils.InStringArray(ctx.Path(), whiteItem) {
+		// 判断不在白名里，判断不是超级管理员
+		if !service.IsSuperAdmin(ctx) && utils.IsLogin(ctx) && !utils.InStringArray(ctx.Path(), whiteItem) {
 			// 如果登录了就检查权限
 			user := service.GetUserInfo(ctx)
 			// 查询该用户的权限列表
 			val := utils.RedisClient.Get(utils.GetRedisUidKey(user.Id, conf.USER_MENU_LIST)).Val()
-			mlist := make([]model.Menu, 0, 0)
+			mlist := make([]model.Menu, 0)
 			json.Unmarshal([]byte(val), &mlist)
 			flag := false
 			for _, v := range mlist {

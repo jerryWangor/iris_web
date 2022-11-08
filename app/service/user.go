@@ -28,6 +28,7 @@ import (
 	"easygoadmin/app/dto"
 	"easygoadmin/app/model"
 	"easygoadmin/app/vo"
+	"easygoadmin/conf"
 	"easygoadmin/utils"
 	"easygoadmin/utils/gconv"
 	"errors"
@@ -453,4 +454,13 @@ func GetUserInfo(ctx iris.Context) *model.User {
 		log.Println("记录不存在")
 	}
 	return info
+}
+
+// 是否超级管理员
+func IsSuperAdmin(ctx iris.Context) bool {
+	uid := utils.Uid(ctx)
+	if utils.InIntArray(uid, conf.SUPER_ADMIN_USER_IDS) {
+		return true
+	}
+	return false
 }

@@ -1,0 +1,9 @@
+<form class="layui-form model-form" action="/settime/settime">
+    <div class="layui-form-item">
+        <label class="layui-form-label">时间：</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="time" name="time">
+        </div>
+    </div>
+    {{submit "submit|立即设置,close|关闭" 1 ""}}
+</form>

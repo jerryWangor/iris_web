@@ -263,6 +263,12 @@ func GetNowTimeTime() time.Time {
 	return time
 }
 
+// TimeStringToTimeTime 获取time.Time类型的
+func TimeStringToTimeTime(t string) time.Time {
+	time, _ := time.ParseInLocation("2006-01-02 15:04:05", t, time.Local)
+	return time
+}
+
 // GetNowDateTime 获取time.Time类型的
 func GetNowDateTime() time.Time {
 	date, _ := time.ParseInLocation("2006-01-02", GetNowDateString(), time.Local)

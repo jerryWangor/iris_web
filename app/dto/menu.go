@@ -44,6 +44,7 @@ type MenuAddReq struct {
 	Type       int    `form:"type"`                     // 类型：0 菜单 1 节点
 	Permission string `form:"permission"`               // 权限标识
 	Status     string `form:"status" validate:"string"` // 状态：1正常 2禁用
+	Hide       string `form:"hide" validate:"string"`   // 状态：1显示 2隐藏
 	Target     int    `form:"target"`                   // 打开方式：1内部打开 2外部打开
 	Note       string `form:"note"`                     // 菜单备注
 	Sort       int    `form:"sort" validate:"int"`      // 显示顺序
@@ -57,6 +58,7 @@ func (v MenuAddReq) Messages() map[string]string {
 		"Pid.int":       "请选择上级菜单.",
 		"Type.int":      "请选择菜单类型.",
 		"Status.int":    "请选择菜单状态.",
+		"Hide.int":      "请选择菜单状显示.",
 		"Sort.int":      "排序不能为空.",
 	}
 }
@@ -66,12 +68,13 @@ type MenuUpdateReq struct {
 	Id         int    `form:"id" validate:"int"`
 	Name       string `form:"name" validate:"required"` // 菜单标题
 	Icon       string `form:"icon"`                     // 图标
-	Url        string `form:"url" validate:"required"`  // URL地址
+	Url        string `form:"url"`                      // URL地址
 	Param      string `form:"param"`                    // 参数
 	Pid        int    `form:"pid" validate:"int"`       // 上级ID
-	Type       int    `form:"type"`                     // 类型：1模块 2导航 3菜单 4节点
+	Type       int    `form:"type"`                     // 类型：0 菜单 1 节点
 	Permission string `form:"permission"`               // 权限标识
 	Status     string `form:"status" validate:"string"` // 状态：1正常 2禁用
+	Hide       string `form:"hide" validate:"string"`   // 状态：1显示 2隐藏
 	Target     int    `form:"target"`                   // 打开方式：1内部打开 2外部打开
 	Note       string `form:"note"`                     // 菜单备注
 	Sort       int    `form:"sort" validate:"int"`      // 显示顺序
@@ -86,6 +89,7 @@ func (v MenuUpdateReq) Messages() map[string]string {
 		"Pid.int":       "请选择上级菜单.",
 		"Type.int":      "请选择菜单类型.",
 		"Status.int":    "请选择菜单状态.",
+		"Hide.int":      "请选择菜单显示.",
 		"Sort.int":      "排序不能为空.",
 	}
 }

@@ -29,6 +29,9 @@ var (
 	CONFIG Config
 )
 
+// 超级管理员
+var SUPER_ADMIN_USER_IDS = []int{1}
+
 // USER_ID 登录用户ID
 const USER_ID = "userId"
 const USER_MENU_LIST = "userMenuList"

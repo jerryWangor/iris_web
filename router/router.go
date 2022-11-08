@@ -264,4 +264,21 @@ func RegisterRouter(app *iris.Application) {
 		generate.Post("/batchGenerate", controller.Generate.BatchGenerate)
 	}
 
+	/* GM工具 设置时间 */
+	settime := app.Party("settime")
+	{
+		settime.Get("/index", controller.SetTime.Index)
+		settime.Post("/list", controller.SetTime.List)
+		settime.Get("/set", controller.SetTime.Set)
+		settime.Post("/settime", controller.SetTime.SetTime)
+	}
+
+	///* GM工具 发送邮件 */
+	//sendmail := app.Party("sendmail")
+	//{
+	//	sendmail.Get("/index", controller.SendMail.Index)
+	//	sendmail.Get("/list", controller.SendMail.List)
+	//	sendmail.Post("/sendmail", controller.SendMail.SendMail)
+	//}
+
 }

@@ -27,6 +27,7 @@ import (
 	"easygoadmin/app/dto"
 	"easygoadmin/app/model"
 	"easygoadmin/app/vo"
+	"easygoadmin/conf"
 	"easygoadmin/utils"
 	"easygoadmin/utils/gconv"
 	"easygoadmin/utils/gstr"
@@ -73,6 +74,11 @@ func (s *menuService) Add(req dto.MenuAddReq, userId int) (int64, error) {
 	} else {
 		entity.Status = 2
 	}
+	if req.Hide == "on" {
+		entity.Hide = 1
+	} else {
+		entity.Hide = 2
+	}
 	entity.Note = req.Note
 	entity.Sort = gconv.Int(req.Sort)
 	entity.CreateUser = userId
@@ -111,6 +117,11 @@ func (s *menuService) Update(req dto.MenuUpdateReq, userId int) (int64, error) {
 		entity.Status = 1
 	} else {
 		entity.Status = 2
+	}
+	if req.Hide == "on" {
+		entity.Hide = 1
+	} else {
+		entity.Hide = 2
 	}
 	entity.Note = req.Note
 	entity.Sort = gconv.Int(req.Sort)
@@ -348,7 +359,7 @@ func (s *menuService) MakeList(data []*vo.MenuTreeNode) map[int]string {
 
 // 获取菜单权限列表（Tree）
 func (s *menuService) GetPermissionMenuTreeList(userId int) interface{} {
-	if userId == 1 {
+	if utils.InIntArray(userId, conf.SUPER_ADMIN_USER_IDS) {
 		// 管理员(拥有全部权限)
 		menuList, _ := Menu.GetTreeList()
 		//fmt.Println("菜单列表", menuList)
