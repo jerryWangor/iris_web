@@ -50,6 +50,15 @@ layui.use(['func', 'admin', 'common', "layer", "laydate"], function () {
                 }
             })
         }))
+
+        var time = $("#time").val();
+        time++
+        var timer2 = setInterval(function () {
+            time++
+            let timeStr = timestampToTime(time)
+            // console.log("time", timeStr)
+            $("#server_time").text(timeStr)
+        }, 1000);
     }
 
     if (A == "set") {
@@ -60,3 +69,14 @@ layui.use(['func', 'admin', 'common', "layer", "laydate"], function () {
         });
     }
 });
+
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = (date.getDate() < 10) ? '0' + date.getDate() + ' ' : date.getDate() + ' ';
+    var h = (date.getHours() < 10) ? '0' + date.getHours() + ':' : date.getHours() + ':';
+    var m = (date.getMinutes() < 10) ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
+    var s = (date.getSeconds() < 10) ? '0' + date.getSeconds() : date.getSeconds();
+    return Y+M+D+h+m+s;
+}

@@ -25,7 +25,14 @@ package constant
 
 // 使用key加密规则: key=md5(KEY+message)
 const GMKEY = "153dc7b62ec637173a4f3f288e252e6c"
-const GMURL = "http://192.168.1.81:12001"
+const GMURL = "http://192.168.1.81:12001/"
+const CROMURL = "http://192.168.1.81:13001/"
+
+// 道具类型
+var ITEM_TYPE_LIST = map[int]string{
+	1: "角色",
+	2: "道具",
+}
 
 // 菜单类型
 var MENU_TYPE_LIST = map[int]string{
@@ -121,13 +128,6 @@ var CONFIG_DATA_TYPE_LIST = map[string]string{
 var NOTICE_SOURCE_LIST = map[int]string{
 	1: "内部通知",
 	2: "外部通知",
-}
-
-// 站点类型
-var ITEM_TYPE_LIST = map[int]string{
-	1: "国内站点",
-	2: "国外站点",
-	3: "其他站点",
 }
 
 // 广告位所属平台

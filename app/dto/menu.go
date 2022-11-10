@@ -38,7 +38,7 @@ type MenuAddReq struct {
 	Id         string `form:"id"`
 	Name       string `form:"name" validate:"required"` // 菜单标题
 	Icon       string `form:"icon"`                     // 图标
-	Url        string `form:"url" validate:"required"`  // URL地址
+	Url        string `form:"url"`                      // URL地址
 	Param      string `form:"param"`                    // 参数
 	Pid        int    `form:"pid" validate:"int"`       // 上级ID
 	Type       int    `form:"type"`                     // 类型：0 菜单 1 节点

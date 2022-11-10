@@ -1,13 +1,15 @@
-<!-- 功能操作区一 -->
-<form class="layui-form model-form" action="">
-    <div class="layui-form-item text-center">
-        <div class="layui-inline">
-            <label class="layui-form-label w-auto">角色名称：</label>
-            <div class="layui-input-inline mr0">
-                <input type="text" name="name" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
-            </div>
+<form class="layui-form model-form" action="/sendmail/sendmail">
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色列表：</label>
+        <div class="layui-input-block">
+            <input name="role_list" value="" lay-verify="required" autocomplete="off" placeholder="请输入角色ID列表，多个以,隔开" class="layui-input" type="text">
         </div>
     </div>
-    {{submit "submit|发送奖励" 1 ""}}
+    <div class="layui-form-item">
+        <label class="layui-form-label">道具名称：</label>
+        <div class="layui-input-block">
+            <input name="item_list" value="" lay-verify="required" autocomplete="off" placeholder="请输入道具列表" class="layui-input" type="text">
+        </div>
+    </div>
+    {{submit "submit|立即保存,close|关闭" 1 ""}}
 </form>
-

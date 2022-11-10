@@ -15,52 +15,23 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
-var SetTime = new(SetTimeController)
+var SendMail = new(SendMailController)
 
-type SetTimeController struct{}
+type SendMailController struct{}
 
-func (c *SetTimeController) Index(ctx iris.Context) {
-
-	// 获取服务器时间
-	url := constant.CROMURL + "gettime"
-	resp, err := http.Get(url)
-	if err != nil {
-		ctx.JSON(common.JsonResult{
-			Code: -2,
-			Msg:  err.Error(),
-		})
-		return
-	}
-	defer resp.Body.Close()
-
-	// 读取数据
-	bds, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		ctx.JSON(common.JsonResult{
-			Code: -3,
-			Msg:  err.Error(),
-		})
-		return
-	}
-	var jsonResp model.JsonResp
-	json.Unmarshal(bds, &jsonResp)
-	if jsonResp.Code == 0 && jsonResp.Message == "success" {
-		ctx.ViewData("time", jsonResp.Data)
-	} else {
-		ctx.ViewData("time", utils.GetNowTimeStamp())
-	}
-
+func (c *SendMailController) Index(ctx iris.Context) {
 	// 模板布局
 	ctx.ViewLayout("public/layout.html")
 	// 渲染模板
-	ctx.View("set_time/index.html")
+	ctx.View("send_mail/index.html")
 }
 
-func (c *SetTimeController) List(ctx iris.Context) {
+func (c *SendMailController) List(ctx iris.Context) {
 	// 调用获取列表方法
-	lists, err := service.SetTime.GetList()
+	lists, err := service.SendMail.GetList()
 	if err != nil {
 		ctx.JSON(common.JsonResult{
 			Code: -1,
@@ -68,6 +39,12 @@ func (c *SetTimeController) List(ctx iris.Context) {
 		})
 		return
 	}
+
+	//for k, _ := range lists {
+	//	itemlist, _ := json.Marshal(lists[k].ItemList)
+	//	lists[k].ItemList = itemlist.(string)
+	//}
+
 	// 返回结果集
 	ctx.JSON(common.JsonResult{
 		Code: 0,
@@ -76,16 +53,16 @@ func (c *SetTimeController) List(ctx iris.Context) {
 	})
 }
 
-func (c *SetTimeController) Set(ctx iris.Context) {
+func (c *SendMailController) Mail(ctx iris.Context) {
 	// 模板布局
 	ctx.ViewLayout("public/form.html")
 	// 渲染模板
-	ctx.View("set_time/set.html")
+	ctx.View("send_mail/mail.html")
 }
 
-func (c *SetTimeController) SetTime(ctx iris.Context) {
+func (c *SendMailController) SendMail(ctx iris.Context) {
 	// 添加对象
-	var req dto.SetTimeReq
+	var req dto.SendMailReq
 	// 参数绑定
 	if err := ctx.ReadForm(&req); err != nil {
 		ctx.JSON(common.JsonResult{
@@ -104,19 +81,52 @@ func (c *SetTimeController) SetTime(ctx iris.Context) {
 		return
 	}
 
-	// 调用GM服务
-	time := struct {
-		Time string `json:"time"`
-	}{
-		Time: req.Time,
+	// 先入库
+	req.Title = "测试"
+	req.Content = "测试"
+	req.Type = 1
+	req.Status = 0
+
+	id, err := service.SendMail.Add(req, utils.Uid(ctx))
+	if err != nil {
+		ctx.JSON(common.JsonResult{
+			Code: -1,
+			Msg:  err.Error(),
+		})
+		return
 	}
-	message, err := json.Marshal(time)
+
+	// 调用GM服务
+	var items []model.GmMailItem
+	err = json.Unmarshal([]byte(req.ItemList), &items)
+	if err != nil {
+		ctx.JSON(common.JsonResult{
+			Code: -1,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	var target []model.GmMailTarget
+	// 逗号分割role_list，循环
+	roleArr := strings.Split(req.RoleList, "，")
+	target = append(target, model.GmMailTarget{Type: "list_role", Args: roleArr})
+
+	mail := model.GmMail{
+		Title:   req.Title,
+		Content: req.Content,
+		Items:   items,
+		Target:  target,
+		Other:   "",
+	}
+
+	message, err := json.Marshal(mail)
 	pass, err := gmd5.Encrypt(constant.GMKEY + string(message))
 	query := url.Values{}
 	query.Add("pass", pass)
 	query.Add("message", string(message))
-	fmt.Println(query.Encode())
-	url := constant.GMURL + "settime?" + query.Encode()
+	fmt.Println("message", string(message))
+	url := constant.GMURL + "sendmail?" + query.Encode()
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -139,11 +149,16 @@ func (c *SetTimeController) SetTime(ctx iris.Context) {
 	}
 	var jsonResp model.JsonResp
 	json.Unmarshal(bds, &jsonResp)
-	fmt.Println(string(bds))
+	fmt.Println("接口返回值", string(bds))
+	req.Id = id
+	req.ReturnInfo = string(bds)
 	if jsonResp.Code == 0 && jsonResp.Message == "success" {
-		// 写入数据库
-		service.SetTime.Add(req, utils.Uid(ctx))
+		// 更新状态
+		req.Status = 1
+		service.SendMail.Update(req)
 	} else {
+		req.Status = 2
+		service.SendMail.Update(req)
 		ctx.JSON(common.JsonResult{
 			Code: -4,
 			Msg:  string(bds),
@@ -154,6 +169,6 @@ func (c *SetTimeController) SetTime(ctx iris.Context) {
 	// 设置成功
 	ctx.JSON(common.JsonResult{
 		Code: 0,
-		Msg:  "设置成功",
+		Msg:  "发送成功",
 	})
 }

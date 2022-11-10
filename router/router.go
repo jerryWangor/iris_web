@@ -224,6 +224,17 @@ func RegisterRouter(app *iris.Application) {
 		menu.Post("/delete/{id:int}", controller.Menu.Delete)
 	}
 
+	/* 道具管理 */
+	item := app.Party("item")
+	{
+		item.Get("/index", controller.Item.Index)
+		item.Post("/list", controller.Item.List)
+		item.Get("/edit/{id:int}", controller.Item.Edit)
+		item.Post("/add", controller.Item.Add)
+		item.Post("/update", controller.Item.Update)
+		item.Post("/delete/{id:int}", controller.Item.Delete)
+	}
+
 	/* 城市管理 */
 	city := app.Party("city")
 	{
@@ -273,12 +284,13 @@ func RegisterRouter(app *iris.Application) {
 		settime.Post("/settime", controller.SetTime.SetTime)
 	}
 
-	///* GM工具 发送邮件 */
-	//sendmail := app.Party("sendmail")
-	//{
-	//	sendmail.Get("/index", controller.SendMail.Index)
-	//	sendmail.Get("/list", controller.SendMail.List)
-	//	sendmail.Post("/sendmail", controller.SendMail.SendMail)
-	//}
+	/* GM工具 发送邮件 */
+	sendmail := app.Party("sendmail")
+	{
+		sendmail.Get("/index", controller.SendMail.Index)
+		sendmail.Post("/list", controller.SendMail.List)
+		sendmail.Get("/mail", controller.SendMail.Mail)
+		sendmail.Post("/sendmail", controller.SendMail.SendMail)
+	}
 
 }
