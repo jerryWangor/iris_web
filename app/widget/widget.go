@@ -66,7 +66,7 @@ func Submit(s string, t int, o string) template.HTML {
 		narr := strings.Split(v, "|")
 		switch narr[0] {
 		case "submit":
-			str += `<button class="layui-btn" lay-filter="` + o + `" lay-submit="">` + narr[1] + `</button>`
+			str += `<button class="layui-btn preservation" lay-filter="` + o + `" lay-submit="">` + narr[1] + `</button>`
 		case "close":
 			str += `<button class="layui-btn layui-btn-primary" type="button" ew-event="closeDialog">` + narr[1] + `</button>`
 		}

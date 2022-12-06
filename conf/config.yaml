@@ -41,7 +41,7 @@ easygoadmin:
   # 版本号
   version: "v1.0.0"
   # IP地址
-  addr: 127.0.0.1
+  addr: 192.168.1.81
   # 端口号
   port: 9087
   # 调试模式
